@@ -6,7 +6,7 @@ require (
 	github.com/lib/pq v1.10.7
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.15.0
-	gitlab.com/wb-dynamics/wb-go-libs v0.1.0
+	gitlab.com/wb-dynamics/wb-go-libs v0.1.2
 )
 
 require (

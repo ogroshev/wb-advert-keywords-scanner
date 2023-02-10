@@ -14,37 +14,40 @@ const (
 	kRefererHeader = "https://cmp.wildberries.ru/campaigns/list/active/edit/search/%d"
 )
 
+type Words struct {
+	Phrase   []string `json:"phrase"`
+	Strong   []string `json:"strong"`
+	Excluded []string `json:"excluded"`
+	Pluse    []string `json:"pluse"`
+	Keywords []struct {
+		Keyword string `json:"keyword"`
+		Count   int    `json:"count"`
+	} `json:"keywords"`
+	Fixed bool `json:"fixed"`
+}
+type Stat struct {
+	AdvertId     int       `json:"advertId"`
+	Keyword      string    `json:"keyword"`
+	AdvertName   string    `json:"advertName"`
+	CampaignName string    `json:"campaignName"`
+	Begin        time.Time `json:"begin"`
+	End          time.Time `json:"end"`
+	Views        int       `json:"views"`
+	Clicks       int       `json:"clicks"`
+	Frq          float32   `json:"frq"`
+	Ctr          float32   `json:"ctr"`
+	Cpc          float32   `json:"cpc"`
+	Duration     int       `json:"duration"`
+	Sum          float32   `json:"sum"`
+}
+
 type keywordsResponse struct {
-	Words struct {
-		Phrase   []string `json:"phrase"`
-		Strong   []string `json:"strong"`
-		Excluded []string `json:"excluded"`
-		Pluse    []string `json:"pluse"`
-		Keywords []struct {
-			Keyword string `json:"keyword"`
-			Count   int    `json:"count"`
-		} `json:"keywords"`
-		Fixed bool `json:"fixed"`
-	} `json:"words"`
-	Stat []struct {
-		AdvertId     int       `json:"advertId"`
-		Keyword      string    `json:"keyword"`
-		AdvertName   string    `json:"advertName"`
-		CampaignName string    `json:"campaignName"`
-		Begin        time.Time `json:"begin"`
-		End          time.Time `json:"end"`
-		Views        int       `json:"views"`
-		Clicks       int       `json:"clicks"`
-		Frq          float32   `json:"frq"`
-		Ctr          float32   `json:"ctr"`
-		Cpc          float32   `json:"cpc"`
-		Duration     int       `json:"duration"`
-		Sum          float32   `json:"sum"`
-	} `json:"stat"`
+	Words Words `json:"words"`
+	Stat []Stat `json:"stat"`
 	Total uint32 `json:"total"`
 }
 
-func GetStatWords(advCompanyID uint64, rawCookies string, xUserID string) (keywords []string, err error) {
+func GetStatWords(advCompanyID uint64, rawCookies string, xUserID string) (words *Words, err error) {
 	url := fmt.Sprintf(kGetStatWords, advCompanyID)
 	headers := map[string]string{
 		"Cookie":    rawCookies,
@@ -66,8 +69,8 @@ func GetStatWords(advCompanyID uint64, rawCookies string, xUserID string) (keywo
 		return nil, err
 	}
 
-	for _, kw := range keywordsResp.Words.Keywords {
-		keywords = append(keywords, kw.Keyword)
-	}
-	return keywords, nil
+	// for _, kw := range keywordsResp.Words.Keywords {
+	// 	keywords = append(keywords, kw.Keyword)
+	// }
+	return &keywordsResp.Words, nil
 }
